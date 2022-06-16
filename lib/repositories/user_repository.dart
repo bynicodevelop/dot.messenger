@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dot_messenger/exceptions/user_repository_exception.dart';
 import 'package:dot_messenger/models/authenticated_user_model.dart';
+import 'package:dot_messenger/models/profile_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 enum FollowStatusEnum {
@@ -148,5 +149,48 @@ class UserRepository {
 
   Future<void> logout() async {
     await firebaseAuth.signOut();
+  }
+
+  Future<ProfileModel> connectUser(Map<String, dynamic> data) async {
+    final User? user = firebaseAuth.currentUser;
+
+    if (user == null) {
+      throw Exception('User is not logged in');
+    }
+
+    final String uid = data["uid"];
+
+    final DocumentReference<Map<String, dynamic>> contactUserRef =
+        firebaseFirestore.collection("users").doc(uid);
+
+    final QuerySnapshot contactUserDocumentSnapshot = await firebaseFirestore
+        .collection("users")
+        .doc(user.uid)
+        .collection("contacts")
+        .where(
+          "userRef",
+          isEqualTo: contactUserRef,
+        )
+        .get();
+
+    // if (contactUserDocumentSnapshot.docs.isNotEmpty) {
+    //   return null;
+    // }
+
+    await firebaseFirestore
+        .collection("users")
+        .doc(user.uid)
+        .collection("contacts")
+        .add({
+      "userRef": contactUserRef,
+    });
+
+    final DocumentSnapshot<Map<String, dynamic>> contactUser =
+        await contactUserRef.get();
+
+    return ProfileModel.fromMap({
+      "uid": contactUser.id,
+      ...contactUser.data()!,
+    });
   }
 }

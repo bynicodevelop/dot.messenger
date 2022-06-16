@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dot_messenger/config/bloc_register.dart';
 import 'package:dot_messenger/config/custom_theme_data.dart';
 import 'package:dot_messenger/screens/authentication/signin_screen.dart';
+import 'package:dot_messenger/screens/deep_link_screen.dart';
 import 'package:dot_messenger/screens/home_screen.dart';
 import 'package:dot_messenger/screens/slash_screen.dart';
 import 'package:dot_messenger/screens/start_wizard_screen.dart';
@@ -73,6 +74,37 @@ class App extends StatelessWidget {
         title: 'Dot Messenger',
         debugShowCheckedModeBanner: false,
         theme: CustomThemeData.themeLight(context),
+        onGenerateRoute: (RouteSettings setting) {
+          if (setting.name != null && setting.name!.startsWith("/connect")) {
+            final String uid = setting.name!.split("/").last;
+
+            return MaterialPageRoute(
+              builder: (context) => DeepLinkScreen(
+                uid: uid,
+              ),
+            );
+
+            // MaterialPageRoute(
+            //   builder: (context) =>
+            //       BlocBuilder<ConnectUserBloc, ConnectUserState>(
+            //     bloc: context.read<ConnectUserBloc>()
+            //       ..add(
+            //         OnConnectUserEvent(
+            //           uid: uid,
+            //         ),
+            //       ),
+            //     builder: (context, state) {
+            //       print(state);
+            //       return MessageCreatorScreen(
+            //         profileModel: (state as ConnecterUserState).profileModel,
+            //       );
+            //     },
+            //   ),
+            // );
+          }
+
+          return null;
+        },
         home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (context, state) {
             if (state is AuthenticationInitialState) {

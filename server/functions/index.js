@@ -13,3 +13,30 @@ exports.onUserCreated = functions.auth.user().onCreate(async (user) => {
 
     await userRef.set(userData);
 })
+
+exports.onUserAddedContact = functions.firestore.document("users/{userId}/contacts/{contactId}").onCreate(async (snapshot, context) => { 
+    const {userId, contactId} = context.params;
+
+    const contactDocumentSnapshot = await admin
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .collection("contacts")
+        .doc(contactId)
+        .get();
+
+    const { userRef } = contactDocumentSnapshot.data();
+
+    const contactRefDocuments = await userRef
+        .collection("contacts")
+        .where("userRef", "==", admin.firestore().collection("users").doc(userId))
+        .get();
+
+    if(contactRefDocuments.docs.length > 0) {
+        return;
+    }
+
+    await userRef.collection("contacts").add({
+        userRef: admin.firestore().collection("users").doc(userId)
+    })
+});

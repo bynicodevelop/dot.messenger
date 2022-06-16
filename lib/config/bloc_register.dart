@@ -4,6 +4,7 @@ import 'package:dot_messenger/components/avatar/bloc/avatar_bloc.dart';
 import 'package:dot_messenger/repositories/image_repository.dart';
 import 'package:dot_messenger/repositories/user_repository.dart';
 import 'package:dot_messenger/services/authentication/authentication_bloc.dart';
+import 'package:dot_messenger/services/connect_user/connect_user_bloc.dart';
 import 'package:dot_messenger/services/loading/loading_bloc.dart';
 import 'package:dot_messenger/services/logout/logout_bloc.dart';
 import 'package:dot_messenger/services/profile_settings/profile_settings_bloc.dart';
@@ -93,6 +94,11 @@ class BlocRegister extends StatelessWidget {
             userRepository: userRepository,
           ),
         ),
+        BlocProvider(
+          create: (context) => ConnectUserBloc(
+            userRepository: userRepository,
+          ),
+        )
       ],
       child: child,
     );

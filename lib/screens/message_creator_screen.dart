@@ -1,112 +1,113 @@
 import 'package:dot_messenger/components/message_form/mobile_message_form_component.dart';
 import 'package:dot_messenger/config/constant.dart';
+import 'package:dot_messenger/models/profile_model.dart';
 import 'package:dot_messenger/widgets/mobile_messenger_app_bar.dart';
 import 'package:flutter/material.dart';
 
 final List<Map<String, dynamic>> messages = [
-  {
-    'id': '120',
-    'text': 'Hello there!',
-    'author': true,
-    'uid': '1',
-    'time': DateTime.now(),
-  },
-  {
-    'id': '121',
-    'text': 'Hello',
-    'author': false,
-    'uid': '2',
-    'time': DateTime.now(),
-  },
-  {
-    'id': '122',
-    'text': 'lorem ipsum dolor sit amet',
-    'author': true,
-    'uid': '1',
-    'time': DateTime.now(),
-  },
-  {
-    'id': '123',
-    'text': 'lorem ipsum dolor sit amet, consectetur adipiscing elit',
-    'author': false,
-    'uid': '2',
-    'time': DateTime.now(),
-  },
-  {
-    'id': '120',
-    'text': 'Hello there!',
-    'author': true,
-    'uid': '1',
-    'time': DateTime.now(),
-  },
-  {
-    'id': '120',
-    'text': 'Hello there!',
-    'author': true,
-    'uid': '1',
-    'time': DateTime.now(),
-  },
-  {
-    'id': '121',
-    'text': 'Hello',
-    'author': false,
-    'uid': '2',
-    'time': DateTime.now(),
-  },
-  {
-    'id': '122',
-    'text': 'lorem ipsum dolor sit amet',
-    'author': true,
-    'uid': '1',
-    'time': DateTime.now(),
-  },
-  {
-    'id': '123',
-    'text': 'lorem ipsum dolor sit amet, consectetur adipiscing elit',
-    'author': false,
-    'uid': '2',
-    'time': DateTime.now(),
-  },
-  {
-    'id': '123',
-    'text': 'lorem ipsum dolor sit amet, consectetur adipiscing elit',
-    'author': false,
-    'uid': '2',
-    'time': DateTime.now(),
-  },
-  {
-    'id': '122',
-    'text': 'lorem ipsum dolor sit amet',
-    'author': true,
-    'uid': '1',
-    'time': DateTime.now(),
-  },
-  {
-    'id': '123',
-    'text': 'lorem ipsum dolor sit amet, consectetur adipiscing elit',
-    'author': false,
-    'uid': '2',
-    'time': DateTime.now(),
-  },
-  {
-    'id': '123',
-    'text': 'lorem ipsum dolor sit amet, consectetur adipiscing elit',
-    'author': false,
-    'uid': '2',
-    'time': DateTime.now(),
-  },
+  // {
+  //   'id': '120',
+  //   'text': 'Hello there!',
+  //   'author': true,
+  //   'uid': '1',
+  //   'time': DateTime.now(),
+  // },
+  // {
+  //   'id': '121',
+  //   'text': 'Hello',
+  //   'author': false,
+  //   'uid': '2',
+  //   'time': DateTime.now(),
+  // },
+  // {
+  //   'id': '122',
+  //   'text': 'lorem ipsum dolor sit amet',
+  //   'author': true,
+  //   'uid': '1',
+  //   'time': DateTime.now(),
+  // },
+  // {
+  //   'id': '123',
+  //   'text': 'lorem ipsum dolor sit amet, consectetur adipiscing elit',
+  //   'author': false,
+  //   'uid': '2',
+  //   'time': DateTime.now(),
+  // },
+  // {
+  //   'id': '120',
+  //   'text': 'Hello there!',
+  //   'author': true,
+  //   'uid': '1',
+  //   'time': DateTime.now(),
+  // },
+  // {
+  //   'id': '120',
+  //   'text': 'Hello there!',
+  //   'author': true,
+  //   'uid': '1',
+  //   'time': DateTime.now(),
+  // },
+  // {
+  //   'id': '121',
+  //   'text': 'Hello',
+  //   'author': false,
+  //   'uid': '2',
+  //   'time': DateTime.now(),
+  // },
+  // {
+  //   'id': '122',
+  //   'text': 'lorem ipsum dolor sit amet',
+  //   'author': true,
+  //   'uid': '1',
+  //   'time': DateTime.now(),
+  // },
+  // {
+  //   'id': '123',
+  //   'text': 'lorem ipsum dolor sit amet, consectetur adipiscing elit',
+  //   'author': false,
+  //   'uid': '2',
+  //   'time': DateTime.now(),
+  // },
+  // {
+  //   'id': '123',
+  //   'text': 'lorem ipsum dolor sit amet, consectetur adipiscing elit',
+  //   'author': false,
+  //   'uid': '2',
+  //   'time': DateTime.now(),
+  // },
+  // {
+  //   'id': '122',
+  //   'text': 'lorem ipsum dolor sit amet',
+  //   'author': true,
+  //   'uid': '1',
+  //   'time': DateTime.now(),
+  // },
+  // {
+  //   'id': '123',
+  //   'text': 'lorem ipsum dolor sit amet, consectetur adipiscing elit',
+  //   'author': false,
+  //   'uid': '2',
+  //   'time': DateTime.now(),
+  // },
+  // {
+  //   'id': '123',
+  //   'text': 'lorem ipsum dolor sit amet, consectetur adipiscing elit',
+  //   'author': false,
+  //   'uid': '2',
+  //   'time': DateTime.now(),
+  // },
 ];
 
 class MessageCreatorScreen extends StatelessWidget {
   final bool isMobile;
-  final Map<String, dynamic> profile;
+  final ProfileModel profileModel;
 
   final double _height = 110.0;
 
   const MessageCreatorScreen({
     Key? key,
     this.isMobile = false,
-    required this.profile,
+    required this.profileModel,
   }) : super(key: key);
 
   @override
@@ -114,14 +115,14 @@ class MessageCreatorScreen extends StatelessWidget {
     return Scaffold(
       appBar: MobileMessengerAppBarWidget(
         avatar: Hero(
-          tag: profile['uid'],
+          tag: profileModel.uid,
           child: CircleAvatar(
             backgroundImage: NetworkImage(
-              profile['avatar'],
+              profileModel.avatar,
             ),
           ),
         ),
-        username: profile['username'],
+        username: profileModel.username,
       ),
       body: Stack(
         children: [

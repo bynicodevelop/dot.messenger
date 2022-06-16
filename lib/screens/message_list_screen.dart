@@ -57,17 +57,17 @@ class MessagesListScreen extends StatelessWidget {
             child: ListTile(
               onTap: () => onMessageTap(messages[index]),
               leading: Hero(
-                tag: messages[index]["profile"]["uid"],
+                tag: messages[index]["profile"].uid,
                 child: CircleAvatar(
                   radius: 25.0,
                   backgroundColor: Colors.grey,
                   backgroundImage: NetworkImage(
-                    messages[index]["profile"]["avatar"],
+                    messages[index]["profile"].avatar,
                   ),
                 ),
               ),
               title: Text(
-                messages[index]["profile"]["username"],
+                messages[index]["profile"].username,
                 style: Theme.of(context).textTheme.headline4!,
               ),
               subtitle: Row(
