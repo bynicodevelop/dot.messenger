@@ -1,4 +1,5 @@
 import 'package:dot_messenger/screens/authentication/signin_screen.dart';
+import 'package:dot_messenger/screens/invitation_screen.dart';
 import 'package:dot_messenger/screens/user_settings_screen.dart';
 import 'package:dot_messenger/services/logout/logout_bloc.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,17 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          _listTile(
+            Icons.link,
+            'Invatation',
+            'Invitez vos amis à vous rejoindre',
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const InvitationScreen(),
+              ),
+            ),
+          ),
           _listTile(
             Icons.person,
             'Profil',

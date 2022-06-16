@@ -21,6 +21,11 @@ class CustomThemeData {
         centerTitle: false,
       ),
       textTheme: base.textTheme.copyWith(
+        headline2: base.textTheme.headline3!.copyWith(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: Colors.black,
+        ),
         headline3: base.textTheme.headline3!.copyWith(
           fontSize: 14,
           fontWeight: FontWeight.w500,

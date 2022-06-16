@@ -83,24 +83,6 @@ class App extends StatelessWidget {
                 uid: uid,
               ),
             );
-
-            // MaterialPageRoute(
-            //   builder: (context) =>
-            //       BlocBuilder<ConnectUserBloc, ConnectUserState>(
-            //     bloc: context.read<ConnectUserBloc>()
-            //       ..add(
-            //         OnConnectUserEvent(
-            //           uid: uid,
-            //         ),
-            //       ),
-            //     builder: (context, state) {
-            //       print(state);
-            //       return MessageCreatorScreen(
-            //         profileModel: (state as ConnecterUserState).profileModel,
-            //       );
-            //     },
-            //   ),
-            // );
           }
 
           return null;
