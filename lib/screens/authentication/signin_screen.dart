@@ -1,5 +1,6 @@
 import 'package:dot_messenger/components/forms/password_textfield.dart';
 import 'package:dot_messenger/screens/authentication/signup_screen.dart';
+import 'package:dot_messenger/screens/home_screen.dart';
 import 'package:dot_messenger/services/signin/signin_bloc.dart';
 import 'package:dot_messenger/widgets/headling_authentication_form_widget.dart';
 import 'package:flutter/foundation.dart';
@@ -27,7 +28,22 @@ class SignInScreen extends StatelessWidget {
     return Scaffold(
       body: BlocListener<SignInBloc, SignInState>(
         listener: (context, state) {
-          // TODO: implement listener
+          if (state is SignInFailureState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(messages[state.error]!),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+
+          if (state is SignInSuccessState) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+              (route) => false,
+            );
+          }
         },
         child: Center(
           child: SingleChildScrollView(
@@ -108,12 +124,12 @@ class SignInScreen extends StatelessWidget {
                           return;
                         }
 
-                        // context.read<SignInBloc>().add(
-                        //       OnSignInEvent(
-                        //         email: emailController.text,
-                        //         password: passwordController.text,
-                        //       ),
-                        //     );
+                        context.read<SignInBloc>().add(
+                              OnSignInEvent(
+                                email: emailController.text,
+                                password: passwordController.text,
+                              ),
+                            );
                       },
                       child: Text(
                         "Connexion",

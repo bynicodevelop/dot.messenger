@@ -1,3 +1,4 @@
+import 'package:dot_messenger/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -20,13 +21,23 @@ class MessagesListScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Messages"),
         actions: [
-          IconButton(
-            icon: FaIcon(
-              FontAwesomeIcons.penToSquare,
-              size: 20,
-              color: Colors.grey[800],
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 16.0,
             ),
-            onPressed: () {},
+            child: IconButton(
+              icon: FaIcon(
+                FontAwesomeIcons.gear,
+                size: 20,
+                color: Colors.grey[800],
+              ),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              ),
+            ),
           ),
         ],
       ),

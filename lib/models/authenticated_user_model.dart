@@ -5,12 +5,14 @@ class AuthenticatedUserModel extends Equatable {
   final String username;
   final String email;
   final String avatar;
+  final String description;
 
   const AuthenticatedUserModel({
     required this.uid,
     required this.username,
     required this.email,
     this.avatar = "",
+    this.description = "",
   });
 
   factory AuthenticatedUserModel.fromMap(Map<String, dynamic> user) {
@@ -19,6 +21,7 @@ class AuthenticatedUserModel extends Equatable {
       username: user['username'],
       email: user['email'],
       avatar: user['avatar'],
+      description: user['description'],
     );
   }
 
@@ -28,6 +31,7 @@ class AuthenticatedUserModel extends Equatable {
       'username': username,
       'email': email,
       'avatar': avatar,
+      'description': description,
     };
   }
 
@@ -39,6 +43,7 @@ class AuthenticatedUserModel extends Equatable {
       username: '',
       email: '',
       avatar: '',
+      description: '',
     );
   }
 
@@ -48,5 +53,6 @@ class AuthenticatedUserModel extends Equatable {
         username,
         email,
         avatar,
+        description,
       ];
 }

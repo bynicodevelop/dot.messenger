@@ -50,6 +50,7 @@ class UserRepository {
       'username': userData['username'] ?? "",
       'email': user.email ?? "",
       'avatar': userData['avatar'] ?? "",
+      'description': userData['description'] ?? "",
     });
   }
 

@@ -5,9 +5,12 @@ import 'package:dot_messenger/repositories/image_repository.dart';
 import 'package:dot_messenger/repositories/user_repository.dart';
 import 'package:dot_messenger/services/authentication/authentication_bloc.dart';
 import 'package:dot_messenger/services/loading/loading_bloc.dart';
+import 'package:dot_messenger/services/logout/logout_bloc.dart';
+import 'package:dot_messenger/services/profile_settings/profile_settings_bloc.dart';
 import 'package:dot_messenger/services/signin/signin_bloc.dart';
 import 'package:dot_messenger/services/signup/signup_bloc.dart';
 import 'package:dot_messenger/services/start_wizard/start_wizard_bloc.dart';
+import 'package:dot_messenger/services/update_profile_settings/update_profile_settings_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -73,6 +76,21 @@ class BlocRegister extends StatelessWidget {
               firebaseStorage: firebaseStorage,
               firebaseAuth: firebaseAuth,
             ),
+          ),
+        ),
+        BlocProvider<LogoutBloc>(
+          create: (context) => LogoutBloc(
+            userRepository: userRepository,
+          ),
+        ),
+        BlocProvider<UpdateProfileSettingsBloc>(
+          create: (context) => UpdateProfileSettingsBloc(
+            userRepository: userRepository,
+          ),
+        ),
+        BlocProvider<ProfileSettingsBloc>(
+          create: (context) => ProfileSettingsBloc(
+            userRepository: userRepository,
           ),
         ),
       ],
