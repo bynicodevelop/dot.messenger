@@ -1,5 +1,4 @@
 import 'package:dot_messenger/components/invitation_buttons/invitation_buttons_component.dart';
-import 'package:dot_messenger/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -18,106 +17,80 @@ class MessagesListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Messages"),
-        titleSpacing: 30.0,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(
-              right: 16.0,
+    return messages.isNotEmpty
+        ? ListView.separated(
+            padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 28.0 : 0.0,
+              vertical: 8.0,
             ),
-            child: IconButton(
-              icon: FaIcon(
-                FontAwesomeIcons.gear,
-                size: 20,
-                color: Colors.grey[800],
-              ),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SettingsScreen(),
+            itemCount: messages.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  color: Colors.white,
                 ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      body: messages.isNotEmpty
-          ? ListView.separated(
-              padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 28.0 : 0.0,
-                vertical: 8.0,
-              ),
-              itemCount: messages.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: Colors.white,
-                  ),
-                  child: ListTile(
-                    onTap: () => onMessageTap(messages[index]),
-                    leading: Hero(
-                      tag: messages[index]["profile"].uid,
-                      child: CircleAvatar(
-                        radius: 25.0,
-                        backgroundColor: Colors.grey,
-                        backgroundImage: NetworkImage(
-                          messages[index]["profile"].avatar,
-                        ),
+                child: ListTile(
+                  onTap: () => onMessageTap(messages[index]),
+                  leading: Hero(
+                    tag: messages[index]["profile"].uid,
+                    child: CircleAvatar(
+                      radius: 25.0,
+                      backgroundColor: Colors.grey,
+                      backgroundImage: NetworkImage(
+                        messages[index]["profile"].avatar,
                       ),
                     ),
-                    title: Text(
-                      messages[index]["profile"].username,
-                      style: Theme.of(context).textTheme.headline4!,
-                    ),
-                    subtitle: Row(
-                      children: [
-                        if (messages[index]["readed"] == true)
-                          const Padding(
-                            padding: EdgeInsets.only(
-                              right: 2.0,
-                            ),
-                            child: FaIcon(
-                              FontAwesomeIcons.checkDouble,
-                              size: 12.0,
-                            ),
-                          ),
-                        Flexible(
-                          child: Text(
-                            messages[index]["message"],
-                            style: Theme.of(context).textTheme.subtitle1!,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        )
-                      ],
-                    ),
-                    trailing: Column(
-                      children: [
-                        Text(
-                          timeago.format(messages[index]["time"],
-                              locale: 'en_short'),
-                          style: Theme.of(context).textTheme.caption!,
-                        ),
-                      ],
-                    ),
                   ),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                  height: 16.0,
-                );
-              },
-            )
-          : const Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 32.0,
-              ),
-              child: InvitationButtonComponent(),
+                  title: Text(
+                    messages[index]["profile"].username,
+                    style: Theme.of(context).textTheme.headline4!,
+                  ),
+                  subtitle: Row(
+                    children: [
+                      if (messages[index]["readed"] == true)
+                        const Padding(
+                          padding: EdgeInsets.only(
+                            right: 2.0,
+                          ),
+                          child: FaIcon(
+                            FontAwesomeIcons.checkDouble,
+                            size: 12.0,
+                          ),
+                        ),
+                      Flexible(
+                        child: Text(
+                          messages[index]["message"],
+                          style: Theme.of(context).textTheme.subtitle1!,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
+                    ],
+                  ),
+                  trailing: Column(
+                    children: [
+                      Text(
+                        timeago.format(messages[index]["time"],
+                            locale: 'en_short'),
+                        style: Theme.of(context).textTheme.caption!,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(
+                height: 16.0,
+              );
+            },
+          )
+        : const Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 32.0,
             ),
-    );
+            child: InvitationButtonComponent(),
+          );
   }
 }

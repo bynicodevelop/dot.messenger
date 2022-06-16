@@ -173,9 +173,9 @@ class UserRepository {
         )
         .get();
 
-    // if (contactUserDocumentSnapshot.docs.isNotEmpty) {
-    //   return null;
-    // }
+    if (contactUserDocumentSnapshot.docs.isNotEmpty) {
+      return ProfileModel.empty();
+    }
 
     await firebaseFirestore
         .collection("users")
@@ -192,5 +192,34 @@ class UserRepository {
       "uid": contactUser.id,
       ...contactUser.data()!,
     });
+  }
+
+  Future<List<ProfileModel>> get contacts async {
+    final User? user = firebaseAuth.currentUser;
+
+    if (user == null) {
+      throw Exception('User is not logged in');
+    }
+
+    final QuerySnapshot<Map<String, dynamic>> contactUserDocumentSnapshot =
+        await firebaseFirestore
+            .collection("users")
+            .doc(user.uid)
+            .collection("contacts")
+            .get();
+
+    return (await Future.wait(
+            contactUserDocumentSnapshot.docs.map((contact) async {
+      final data = contact.data();
+
+      final DocumentSnapshot<Map<String, dynamic>> userDocumentSnapshot =
+          await data["userRef"].get();
+
+      return ProfileModel.fromMap({
+        "uid": userDocumentSnapshot.id,
+        ...userDocumentSnapshot.data()!,
+      });
+    })))
+        .toList();
   }
 }

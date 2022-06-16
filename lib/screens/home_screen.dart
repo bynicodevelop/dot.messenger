@@ -1,7 +1,11 @@
+import 'package:dot_messenger/config/constant.dart';
 import 'package:dot_messenger/responsive.dart';
+import 'package:dot_messenger/screens/contact_screen.dart';
 import 'package:dot_messenger/screens/message_creator_screen.dart';
 import 'package:dot_messenger/screens/message_list_screen.dart';
+import 'package:dot_messenger/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 final List<Map<String, dynamic>> messages = [
   // {
@@ -69,84 +73,89 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Map<String, dynamic> _currentMessage;
+  final PageController _pageController = PageController(
+    initialPage: 1,
+  );
+  int _currentIndex = 1;
 
-  @override
-  void initState() {
-    super.initState();
-
-    if (messages.isNotEmpty) {
-      setState(() => _currentMessage = messages.first);
-    }
-  }
+  final List<String> _titles = [
+    'Messages',
+    'Contacts',
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Responsive(
-        mobile: MessagesListScreen(
-          isMobile: Responsive.isMobile(context),
-          messages: messages,
-          onMessageTap: (Map<String, dynamic> message) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MessageCreatorScreen(
-                  isMobile: Responsive.isMobile(context),
-                  profileModel: message["profile"],
-                ),
+      appBar: AppBar(
+        title: Text(_titles[_currentIndex]),
+        titleSpacing: 30.0,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(
+              right: 16.0,
+            ),
+            child: IconButton(
+              icon: FaIcon(
+                FontAwesomeIcons.gear,
+                size: 20,
+                color: Colors.grey[800],
               ),
-            );
-          },
-        ),
-        tablet: MessagesListScreen(
-          messages: messages,
-          onMessageTap: (Map<String, dynamic> message) {
-            setState(() => _currentMessage = message);
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => MessageCreatorScreen(
-            //       profile: message["profile"],
-            //     ),
-            //   ),
-            // );
-          },
-        ),
-        desktop: Row(
-          children: [
-            SizedBox(
-              width: 400.0,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                ),
-                child: MessagesListScreen(
-                  isMobile: Responsive.isMobile(context),
-                  messages: messages,
-                  onMessageTap: (Map<String, dynamic> message) {
-                    setState(() => _currentMessage = message);
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => MessageCreatorScreen(
-                    //       profile: message["profile"],
-                    //     ),
-                    //   ),
-                    // );
-                  },
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
                 ),
               ),
             ),
-            Expanded(
-              child: Container(),
-              // MessageCreatorScreen(
-              //   isMobile: Responsive.isMobile(context),
-              //   profileModel: _currentMessage["profile"],
-              // ),
-            ),
-          ],
-        ),
+          ),
+        ],
+      ),
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) => setState(() => _currentIndex = index),
+        children: [
+          MessagesListScreen(
+            isMobile: Responsive.isMobile(context),
+            messages: messages,
+            onMessageTap: (Map<String, dynamic> message) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MessageCreatorScreen(
+                    isMobile: Responsive.isMobile(context),
+                    profileModel: message["profile"],
+                  ),
+                ),
+              );
+            },
+          ),
+          const ContactScreen()
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          setState(() => _currentIndex = index);
+
+          _pageController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        },
+        selectedItemColor: kDefaultBubble,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        items: const [
+          BottomNavigationBarItem(
+            icon: FaIcon(FontAwesomeIcons.message),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: FaIcon(FontAwesomeIcons.addressBook),
+            label: "Search",
+          ),
+        ],
       ),
     );
   }
