@@ -24,7 +24,9 @@ class UserSettingsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Modifier mes informations'),
+        title: const Text(
+          'Modifier mes informations',
+        ),
       ),
       body: BlocListener<UpdateProfileSettingsBloc, UpdateProfileSettingsState>(
         listener: (context, state) {

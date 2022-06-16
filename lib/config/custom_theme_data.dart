@@ -15,10 +15,9 @@ class CustomThemeData {
         ),
         titleTextStyle: base.textTheme.headline3!.copyWith(
           color: Colors.black,
-          fontSize: 22.0,
+          fontSize: 20.0,
           fontWeight: FontWeight.w600,
         ),
-        titleSpacing: 30.0,
         centerTitle: false,
       ),
       textTheme: base.textTheme.copyWith(

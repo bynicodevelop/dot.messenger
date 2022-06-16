@@ -20,6 +20,7 @@ class MessagesListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Messages"),
+        titleSpacing: 30.0,
         actions: [
           Padding(
             padding: const EdgeInsets.only(
