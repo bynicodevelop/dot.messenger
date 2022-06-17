@@ -1,10 +1,14 @@
 import 'package:dot_messenger/config/constant.dart';
+import 'package:dot_messenger/models/authenticated_user_model.dart';
+import 'package:dot_messenger/models/chat_model.dart';
 import 'package:dot_messenger/responsive.dart';
 import 'package:dot_messenger/screens/contact_screen.dart';
 import 'package:dot_messenger/screens/message_creator_screen.dart';
 import 'package:dot_messenger/screens/message_list_screen.dart';
 import 'package:dot_messenger/screens/settings_screen.dart';
+import 'package:dot_messenger/services/authentication/authentication_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 final List<Map<String, dynamic>> messages = [
@@ -74,9 +78,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController(
-    initialPage: 1,
+    initialPage: 0,
   );
-  int _currentIndex = 1;
+  int _currentIndex = 0;
 
   final List<String> _titles = [
     'Messages',
@@ -110,27 +114,36 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) => setState(() => _currentIndex = index),
-        children: [
-          MessagesListScreen(
-            isMobile: Responsive.isMobile(context),
-            messages: messages,
-            onMessageTap: (Map<String, dynamic> message) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MessageCreatorScreen(
-                    isMobile: Responsive.isMobile(context),
-                    profileModel: message["profile"],
-                  ),
-                ),
-              );
-            },
-          ),
-          const ContactScreen()
-        ],
+      body: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+        builder: (context, state) {
+          final AuthenticatedUserModel authenticatedUserModel =
+              (state as AuthenticationInitialState).user;
+
+          return PageView(
+            controller: _pageController,
+            onPageChanged: (index) => setState(() => _currentIndex = index),
+            children: [
+              MessagesListScreen(
+                isMobile: Responsive.isMobile(context),
+                messages: messages,
+                onMessageTap: (ChatModel chatModel) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MessageCreatorScreen(
+                        isMobile: Responsive.isMobile(context),
+                        chatModel: chatModel,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              ContactScreen(
+                authenticatedUserModel: authenticatedUserModel,
+              )
+            ],
+          );
+        },
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

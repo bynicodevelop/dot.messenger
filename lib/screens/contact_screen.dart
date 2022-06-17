@@ -1,3 +1,6 @@
+import 'package:dot_messenger/components/avatar/avatar_component.dart';
+import 'package:dot_messenger/models/authenticated_user_model.dart';
+import 'package:dot_messenger/models/chat_model.dart';
 import 'package:dot_messenger/models/profile_model.dart';
 import 'package:dot_messenger/responsive.dart';
 import 'package:dot_messenger/screens/message_creator_screen.dart';
@@ -6,7 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ContactScreen extends StatelessWidget {
-  const ContactScreen({Key? key}) : super(key: key);
+  final AuthenticatedUserModel authenticatedUserModel;
+
+  const ContactScreen({
+    Key? key,
+    required this.authenticatedUserModel,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +44,23 @@ class ContactScreen extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => MessageCreatorScreen(
                       isMobile: Responsive.isMobile(context),
-                      profileModel: contact,
+                      chatModel: ChatModel(
+                        authenticatedUserId: authenticatedUserModel.uid,
+                        peerId: contact.uid,
+                        profile: contact,
+                        lastMessage: "",
+                        // TODO: pas top !
+                        updatedAt: DateTime.now(),
+                      ),
                     ),
                   ),
                 ),
                 leading: Hero(
                   tag: contact.uid,
-                  child: CircleAvatar(
-                    radius: 25.0,
-                    backgroundColor: Colors.grey,
-                    backgroundImage: NetworkImage(
-                      contact.avatar,
-                    ),
+                  child: AvatarComponent(
+                    disabledAnchor: true,
+                    avatarFromProfile: contact.avatar,
+                    size: 25,
                   ),
                 ),
                 title: Text(

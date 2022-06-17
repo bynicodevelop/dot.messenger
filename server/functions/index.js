@@ -40,3 +40,13 @@ exports.onUserAddedContact = functions.firestore.document("users/{userId}/contac
         userRef: admin.firestore().collection("users").doc(userId)
     })
 });
+
+exports.onMessageCreated = functions.firestore.document("/chats/{chatId}/messages/{messageId}").onCreate(async (snapshot, context) => {
+    const { chatId } = context.params;
+    const { text, createdAt } = snapshot.data();
+    
+    await admin.firestore().collection("chats").doc(chatId).update({
+        lastMessage: text,
+        updatedAt: createdAt
+    })
+});

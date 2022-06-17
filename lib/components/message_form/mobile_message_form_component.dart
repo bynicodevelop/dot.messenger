@@ -1,14 +1,29 @@
 import 'package:dot_messenger/config/constant.dart';
+import 'package:dot_messenger/models/chat_model.dart';
+import 'package:dot_messenger/services/post_message/post_message_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class MobileMessageFormComponent extends StatelessWidget {
+class MobileMessageFormComponent extends StatefulWidget {
   final double height;
+  final ChatModel chatModel;
 
   const MobileMessageFormComponent({
     Key? key,
+    required this.chatModel,
     this.height = 100,
   }) : super(key: key);
+
+  @override
+  State<MobileMessageFormComponent> createState() =>
+      _MobileMessageFormComponentState();
+}
+
+class _MobileMessageFormComponentState
+    extends State<MobileMessageFormComponent> {
+  final TextEditingController _messageEditingController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +32,7 @@ class MobileMessageFormComponent extends StatelessWidget {
         horizontal: 28.0,
         vertical: 8.0,
       ),
-      height: height,
+      height: widget.height,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.vertical(
@@ -36,6 +51,7 @@ class MobileMessageFormComponent extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
+              controller: _messageEditingController,
               keyboardType: TextInputType.multiline,
               maxLines: null,
               decoration: InputDecoration(
@@ -59,14 +75,32 @@ class MobileMessageFormComponent extends StatelessWidget {
                   padding: const EdgeInsets.only(
                     right: 10.0,
                   ),
-                  child: Material(
-                    color: Colors.transparent,
-                    shape: const CircleBorder(),
-                    clipBehavior: Clip.hardEdge,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: const FaIcon(
-                        FontAwesomeIcons.paperPlane,
+                  child: BlocListener<PostMessageBloc, PostMessageState>(
+                    listener: (context, state) {
+                      if (state is PostMessageLoadedState) {
+                        _messageEditingController.clear();
+                      }
+                    },
+                    child: Material(
+                      color: Colors.transparent,
+                      shape: const CircleBorder(),
+                      clipBehavior: Clip.hardEdge,
+                      child: IconButton(
+                        onPressed: () {
+                          if (_messageEditingController.text.isNotEmpty) {
+                            context
+                                .read<PostMessageBloc>()
+                                .add(OnSendMessageEvent(
+                                  chatModel: widget.chatModel,
+                                  message: _messageEditingController.text,
+                                ));
+
+                            _messageEditingController.clear();
+                          }
+                        },
+                        icon: const FaIcon(
+                          FontAwesomeIcons.paperPlane,
+                        ),
                       ),
                     ),
                   ),

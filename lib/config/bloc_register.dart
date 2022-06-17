@@ -1,13 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dot_messenger/components/avatar/avatar_edit_button/bloc/avatar_edit_button_bloc.dart';
 import 'package:dot_messenger/components/avatar/bloc/avatar_bloc.dart';
+import 'package:dot_messenger/repositories/chat_repository.dart';
 import 'package:dot_messenger/repositories/image_repository.dart';
+import 'package:dot_messenger/repositories/message_repository.dart';
 import 'package:dot_messenger/repositories/user_repository.dart';
 import 'package:dot_messenger/services/authentication/authentication_bloc.dart';
 import 'package:dot_messenger/services/connect_user/connect_user_bloc.dart';
 import 'package:dot_messenger/services/contacts/contacts_bloc.dart';
+import 'package:dot_messenger/services/list_chat/list_chat_bloc.dart';
+import 'package:dot_messenger/services/list_message/list_message_bloc.dart';
 import 'package:dot_messenger/services/loading/loading_bloc.dart';
 import 'package:dot_messenger/services/logout/logout_bloc.dart';
+import 'package:dot_messenger/services/post_message/post_message_bloc.dart';
 import 'package:dot_messenger/services/profile_settings/profile_settings_bloc.dart';
 import 'package:dot_messenger/services/signin/signin_bloc.dart';
 import 'package:dot_messenger/services/signup/signup_bloc.dart';
@@ -39,6 +44,16 @@ class BlocRegister extends StatelessWidget {
     final UserRepository userRepository = UserRepository(
       firebaseAuth: firebaseAuth,
       firebaseFirestore: firebaseFirestore,
+    );
+
+    final ChatRepository chatRepository = ChatRepository(
+      firebaseFirestore: firebaseFirestore,
+      firebaseAuth: firebaseAuth,
+    );
+
+    final MessageRepository messageRepository = MessageRepository(
+      firebaseFirestore: firebaseFirestore,
+      firebaseAuth: firebaseAuth,
     );
 
     return MultiBlocProvider(
@@ -103,6 +118,22 @@ class BlocRegister extends StatelessWidget {
         BlocProvider(
           create: (context) => ContactsBloc(
             userRepository: userRepository,
+          ),
+        ),
+        BlocProvider(
+          lazy: false,
+          create: (context) => ListChatBloc(
+            chatRepository: chatRepository,
+          ),
+        ),
+        BlocProvider(
+          create: (context) => PostMessageBloc(
+            messageRepository: messageRepository,
+          ),
+        ),
+        BlocProvider(
+          create: (context) => ListMessageBloc(
+            messageRepository: messageRepository,
           ),
         ),
       ],
