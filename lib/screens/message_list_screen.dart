@@ -42,7 +42,7 @@ class MessagesListScreen extends StatelessWidget {
                       child: ListTile(
                         onTap: () => onMessageTap(chatModels[index]),
                         leading: Hero(
-                          tag: chatModels[index].profile.uid,
+                          tag: chatModels[index].id,
                           child: AvatarComponent(
                             avatarFromProfile: chatModels[index].profile.avatar,
                             disabledAnchor: true,

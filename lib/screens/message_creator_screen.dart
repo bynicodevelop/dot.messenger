@@ -9,6 +9,7 @@ import 'package:dot_messenger/services/list_message/list_message_bloc.dart';
 import 'package:dot_messenger/widgets/mobile_messenger_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 final List<Map<String, dynamic>> messages = [
   // {
@@ -121,7 +122,7 @@ class MessageCreatorScreen extends StatelessWidget {
     return Scaffold(
       appBar: MobileMessengerAppBarWidget(
         avatar: Hero(
-          tag: chatModel.profile.uid,
+          tag: chatModel.id,
           child: AvatarComponent(
             disabledAnchor: true,
             avatarFromProfile: chatModel.profile.avatar,
@@ -163,6 +164,7 @@ class MessageCreatorScreen extends StatelessWidget {
                             reverse: true,
                             padding: const EdgeInsets.only(
                               top: 20.0,
+                              bottom: 5.0,
                             ),
                             shrinkWrap: true,
                             itemCount: messages.length,
@@ -235,8 +237,36 @@ class MessageCreatorScreen extends StatelessWidget {
                                   ? const SizedBox(
                                       height: 0.0,
                                     )
-                                  : const SizedBox(
-                                      height: 16.0,
+                                  : Padding(
+                                      padding: EdgeInsets.only(
+                                        top: 8.0,
+                                        left: messages[index].author != user.uid
+                                            ? MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    (isMobile ? .3 : .2) +
+                                                12.0
+                                            : 32.0,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            timeago.format(
+                                              messages[index].time,
+                                              locale: 'en',
+                                            ),
+                                            style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 12.0,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 16.0,
+                                          )
+                                        ],
+                                      ),
                                     );
                             },
                           ),

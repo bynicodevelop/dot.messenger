@@ -54,10 +54,12 @@ class ChatRepository {
           }),
           'authenticatedUserId': user.uid,
           'peerId': peerId,
-          'lastMessage': data['lastMessage'],
-          'updatedAt': DateTime.fromMillisecondsSinceEpoch(
-            data['updatedAt'].seconds * 1000,
-          ),
+          'lastMessage': data['lastMessage'] ?? "",
+          'updatedAt': data['updatedAt'] != null
+              ? DateTime.fromMillisecondsSinceEpoch(
+                  data['updatedAt'].seconds * 1000,
+                )
+              : DateTime.now(),
         });
       })))
           .toList();
